@@ -1,7 +1,7 @@
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+
 
 void main() {
     String pageUrl = "https://www.tiktok.com/@livealoha1230/video/7587966822691966222";
@@ -15,12 +15,12 @@ void main() {
     HttpClient client = HttpClient.newHttpClient();
     System.out.println(client.getClass().getName());
     try {
-        HttpResponse<String> cevap = client.send(rr, HttpResponse.BodyHandlers.ofString())
+        HttpResponse<String> cevap = client.send(rr, HttpResponse.BodyHandlers.ofString());
         int start=cevap.body().indexOf("downloadAddr");
         String downloadadrString = cevap.body().substring(start);
         int end = downloadadrString.indexOf("t_chain_token");
         String downloadUrl = cevap.body().substring(start+15, start+end+13);
-        String replaced=downloadUrl.replace("\\u002F","/")
+        String replaced=downloadUrl.replace("\\u002F","/");
         HttpRequest videoRequest= HttpRequest
                 .newBuilder()
                 .GET()
