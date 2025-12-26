@@ -15,17 +15,12 @@ void main() {
     HttpClient client = HttpClient.newHttpClient();
     System.out.println(client.getClass().getName());
     try {
-        HttpResponse<String> cevap = client.send(rr, HttpResponse.BodyHandlers.ofString());
-        System.out.println("STATUS"+cevap.statusCode());
-        System.out.println(cevap.body());
+        HttpResponse<String> cevap = client.send(rr, HttpResponse.BodyHandlers.ofString())
         int start=cevap.body().indexOf("downloadAddr");
-        String aa = cevap.body().substring(start);
-        int end = aa.indexOf("t_chain_token");
-        System.out.println("=================");
+        String downloadadrString = cevap.body().substring(start);
+        int end = downloadadrString.indexOf("t_chain_token");
         String downloadUrl = cevap.body().substring(start+15, start+end+13);
-        System.out.println(downloadUrl);
-        String replaced=downloadUrl.replace("\\u002F","/");
-        System.out.println(replaced+"kkkkkkkkkkkkk");
+        String replaced=downloadUrl.replace("\\u002F","/")
         HttpRequest videoRequest= HttpRequest
                 .newBuilder()
                 .GET()
