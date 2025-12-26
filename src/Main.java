@@ -33,21 +33,6 @@ void main() {
                 .build();
         HttpResponse<byte[]> respp=client.send(videoRequest,HttpResponse.BodyHandlers.ofByteArray());
         System.out.println(respp.statusCode());
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }catch (Exception ex){
         System.out.println(ex);
     }
