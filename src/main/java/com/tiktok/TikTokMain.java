@@ -17,20 +17,17 @@ void main() {
             .GET()
             .uri(URI.create(pageUrl))
             .build();
-    HttpClient client = HttpClient.newHttpClient();
+    var client = HttpClient.newHttpClient();
     System.out.println(client.getClass().getName());
     try {
-        HttpResponse<String> cevap = client.send(rr, HttpResponse.BodyHandlers.ofString());
-        Document document=Jsoup.parse(cevap.body());
-        Element jsonElement=document.getElementById("__UNIVERSAL_DATA_FOR_REHYDRATION__");
-       String jsonData= jsonElement.data();
+        var jsonData = extractUniversalData(client, rr);
 
         int start=jsonData.indexOf("downloadAddr");
-        String downloadadrString = jsonData.substring(start);
+        var downloadadrString = jsonData.substring(start);
         int end = downloadadrString.indexOf("t_chain_token");
-        String downloadUrl = jsonData.substring(start+15, start+end+13);
-        String replaced=downloadUrl.replace("\\u002F","/");
-        HttpRequest videoRequest= HttpRequest
+        var downloadUrl = jsonData.substring(start+15, start+end+13);
+        var replaced=downloadUrl.replace("\\u002F","/");
+        var videoRequest= HttpRequest
                 .newBuilder()
                 .GET()
                 .uri(URI.create(replaced))
@@ -42,5 +39,13 @@ void main() {
     }
 
 
+}
+
+private static String extractUniversalData(HttpClient client, HttpRequest rr) throws IOException, InterruptedException {
+    HttpResponse<String> cevap = client.send(rr, HttpResponse.BodyHandlers.ofString());
+    Document document=Jsoup.parse(cevap.body());
+    Element jsonElement=document.getElementById("__UNIVERSAL_DATA_FOR_REHYDRATION__");
+    String jsonData= jsonElement.data();
+    return jsonData;
 }
 
