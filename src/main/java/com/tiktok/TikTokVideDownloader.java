@@ -55,10 +55,19 @@ public class TikTokVideDownloader {
                 .GET()
                 .uri(URI.create(replaced))
                 .build();
-        HttpResponse<byte[]> respp = client.send(videoRequest, HttpResponse.BodyHandlers.ofByteArray());
-        System.out.println(respp.statusCode());
-        return respp.body();
+        HttpResponse<byte[]> resp = client.send(videoRequest, HttpResponse.BodyHandlers.ofByteArray());
+        System.out.println(resp.statusCode());
+        if (!isSuccessStatusCode(resp.statusCode())){
+            throw new IllegalStateException("An error occured - status code :%s".formatted(resp.statusCode()));
+        }
+        return resp.body();
+    }
+    private boolean isSuccessStatusCode(int statusCode)
+    {
+         return (statusCode >= 200) && (statusCode <= 299); }
     }
 
-}
+
+
+
 
