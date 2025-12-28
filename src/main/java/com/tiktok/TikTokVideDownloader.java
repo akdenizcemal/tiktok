@@ -2,7 +2,7 @@ package com.tiktok;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Scanner;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +17,7 @@ import java.net.http.HttpResponse;
 
 public class TikTokVideDownloader {
 
-   public void download(String pageUrl)  {
+   public byte[] download(String pageUrl)  {
         HttpRequest rr = HttpRequest
                 .newBuilder()
                 .GET()
@@ -29,7 +29,7 @@ public class TikTokVideDownloader {
        try {
            jsonData = extractUniversalData(client, rr);
            var downloadAddr = extractDownloadAddr(jsonData);
-           fetchAndStoreVideo(downloadAddr, client);
+           return fetchVideo(downloadAddr, client);
        } catch (IOException | InterruptedException e) {
            throw new RuntimeException(e);
        }
@@ -49,7 +49,7 @@ public class TikTokVideDownloader {
                 .get("itemStruct").get("video").get("downloadAddr").asText();
     }
 
-    private void fetchAndStoreVideo(String replaced, HttpClient client) throws IOException, InterruptedException, IOException {
+    private byte[] fetchVideo(String replaced, HttpClient client) throws IOException, InterruptedException, IOException {
         var videoRequest = HttpRequest
                 .newBuilder()
                 .GET()
@@ -57,6 +57,8 @@ public class TikTokVideDownloader {
                 .build();
         HttpResponse<byte[]> respp = client.send(videoRequest, HttpResponse.BodyHandlers.ofByteArray());
         System.out.println(respp.statusCode());
+        return respp.body();
     }
+
 }
 
